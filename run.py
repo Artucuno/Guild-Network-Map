@@ -25,15 +25,16 @@ class Map:
         async def on_ready():
             print("Bot is ready!")
             self.friends = self.bot.relationships
-            input()
+            _fids = [x.id for x in self.friends]
+            input("Press enter to continue")
+            await self.bot.fetch_guilds(with_counts=True)
             for f in self.bot.guilds:
                 print('[GUILD] ', f.name, f.id)
                 self.net.add_node(str(f.id), label=f.name, color='#7FFFD4', value=1000)  # Add the guild to the network
                 for m in f.members:  # Go through all members in the guild
                     print(f'[MEMBER] ({f.id})', m.name, m.id)
-
                     if str(m.id) not in self.members:  # If the member is not in the network, add them
-                        if m.is_friend:  # If the member is a friend, color them red
+                        if m.id in _fids:  # If the member is a friend, color them red
                             print('FRIEND')
                             self.net.add_node(str(m.id), label=m.name, color='#880808')
                         else:
